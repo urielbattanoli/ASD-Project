@@ -1,5 +1,7 @@
 package framework;
 
-public interface  IObserver {
-    public abstract void update();
+public interface IObserver<T> {
+    void deductDone(T object);
+    void increaseDone(T object);
+    void transferDone(T object);
 }

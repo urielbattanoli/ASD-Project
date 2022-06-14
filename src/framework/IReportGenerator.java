@@ -1,5 +1,7 @@
 package framework;
 
+import java.util.Collection;
+
 public interface IReportGenerator {
-    public void generateReport();
+    void generateReport(Collection<Account> list);
 }
