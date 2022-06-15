@@ -1,7 +1,5 @@
 package framework.ui.banking;
 
-import banking.CheckingFactory;
-import banking.SavingFactory;
 import framework.*;
 import framework.ui.IMessenger;
 
@@ -12,7 +10,7 @@ import javax.swing.*;
 /**
  * A basic JFC based application.
  */
-public class BankFrm extends javax.swing.JFrame implements IMessenger {
+public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
     /****
      * init variables in the object
      ****/
@@ -23,13 +21,19 @@ public class BankFrm extends javax.swing.JFrame implements IMessenger {
     private JScrollPane JScrollPane1;
     BankFrm myframe;
     private Object rowdata[];
-	private Service service;
-    
-	public BankFrm(Service service)
-	{
-		this.service = service;
-		myframe = this;
+	protected Service service;
 
+	public BankFrm() {
+		this(new Service());
+	}
+    
+	public BankFrm(Service service) {
+		this.service = service;
+		setupView();
+	}
+
+	private void setupView() {
+		myframe = this;
 		setTitle("Bank Application.");
 		setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout(0,0));
@@ -39,29 +43,28 @@ public class BankFrm extends javax.swing.JFrame implements IMessenger {
 		getContentPane().add(BorderLayout.CENTER, JPanel1);
 		JPanel1.setBounds(0,0,575,310);
 		/*
-		/Add five buttons on the pane 
+		/Add five buttons on the pane
 		/for Adding personal account, Adding company account
 		/Deposit, Withdraw and Exit from the system
 		*/
-        JScrollPane1 = new JScrollPane();
-        model = new DefaultTableModel();
-        JTable1 = new JTable(model);
-        model.addColumn("AccountNr");
-        model.addColumn("Name");
-        model.addColumn("City");
-        model.addColumn("P/C");
-        model.addColumn("Ch/S");
-        model.addColumn("Amount");
-        rowdata = new Object[8];
-        newaccount=false;
-        
-        
-        JPanel1.add(JScrollPane1);
-        JScrollPane1.setBounds(12,92,444,160);
-        JScrollPane1.getViewport().add(JTable1);
-        JTable1.setBounds(0, 0, 420, 0);
+		JScrollPane1 = new JScrollPane();
+		model = new DefaultTableModel();
+		JTable1 = new JTable(model);
+		model.addColumn("AccountNr");
+		model.addColumn("Name");
+		model.addColumn("City");
+		model.addColumn("P/C");
+		model.addColumn("Ch/S");
+		model.addColumn("Amount");
+		rowdata = new Object[8];
+		newaccount=false;
+
+		JPanel1.add(JScrollPane1);
+		JScrollPane1.setBounds(12,92,444,160);
+		JScrollPane1.getViewport().add(JTable1);
+		JTable1.setBounds(0, 0, 420, 0);
 //        rowdata = new Object[8];
-		
+
 		JButton_PerAC.setText("Add personal account");
 		JPanel1.add(JButton_PerAC);
 		JButton_PerAC.setBounds(24,20,192,33);
@@ -84,7 +87,7 @@ public class BankFrm extends javax.swing.JFrame implements IMessenger {
 		// lineBorder1.setRoundedCorners(true);
 		// lineBorder1.setLineColor(java.awt.Color.green);
 		//$$ lineBorder1.move(24,312);
-//		addPanelHook(JPanel1);
+		addPanelHook(JPanel1);
 
 		JButton_PerAC.setActionCommand("jbutton");
 
@@ -97,12 +100,11 @@ public class BankFrm extends javax.swing.JFrame implements IMessenger {
 		JButton_Deposit.addActionListener(lSymAction);
 		JButton_Withdraw.addActionListener(lSymAction);
 		JButton_Addinterest.addActionListener(lSymAction);
-//		addListenerHook(lSymAction);
+		addListenerHook(lSymAction);
 	}
 
-//	public void addPanelHook(JPanel panel) {}
-//
-//	public void addListenerHook(SymAction action) {}
+	public void addPanelHook(JPanel panel) {}
+	public void addListenerHook(SymAction action) {}
 
 	javax.swing.JPanel JPanel1 = new javax.swing.JPanel();
 	javax.swing.JButton JButton_PerAC = new javax.swing.JButton();
@@ -146,8 +148,7 @@ public class BankFrm extends javax.swing.JFrame implements IMessenger {
 		}
 	}
 
-	class SymAction implements java.awt.event.ActionListener
-	{
+	public class SymAction implements java.awt.event.ActionListener {
 		public void actionPerformed(java.awt.event.ActionEvent event)
 		{
 			Object object = event.getSource();
@@ -173,8 +174,7 @@ public class BankFrm extends javax.swing.JFrame implements IMessenger {
 		System.exit(0);
 	}
 
-	void JButtonPerAC_actionPerformed(java.awt.event.ActionEvent event)
-	{
+	void JButtonPerAC_actionPerformed(java.awt.event.ActionEvent event) {
 		/*
 		 JDialog_AddPAcc type object is for adding personal information
 		 construct a JDialog_AddPAcc type object 
@@ -212,15 +212,18 @@ public class BankFrm extends javax.swing.JFrame implements IMessenger {
 			holder = new PersonalHolder(address, email, clientName, birthday);
 		}
 		if(accountType == "S") {
-			factory = new SavingFactory();
+			factory = savingFactory();
 		} else {
-			factory = new CheckingFactory();
+			factory = checkingFactory();
 		}
 		service.createAccount(accountnr, holder, factory);
 	}
 
-	void JButtonCompAC_actionPerformed(java.awt.event.ActionEvent event)
-	{
+	public abstract IStrategyFactory savingFactory();
+
+	public abstract IStrategyFactory checkingFactory();
+
+	void JButtonCompAC_actionPerformed(java.awt.event.ActionEvent event) {
 		/*
 		 construct a JDialog_AddCompAcc type object 
 		 set the boundaries and 

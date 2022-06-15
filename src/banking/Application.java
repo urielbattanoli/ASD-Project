@@ -1,33 +1,38 @@
 package banking;
 
-import framework.Service;
+import framework.IStrategyFactory;
 import framework.ui.banking.BankFrm;
 
 import javax.swing.*;
 
-public class Application {
+public class Application extends BankFrm {
 
-    static public void main(String args[])
-    {
-        Service service = new Service();
-        BankFrm view = new BankFrm(service);
-        new BankingObserver(service, view);
+    public Application() {
+        super();
+        new BankingObserver(service, this);
+    }
+
+    public void addPanelHook(JPanel panel) {}
+    public void addListenerHook(SymAction action) {}
+
+    public IStrategyFactory savingFactory() {
+        return SavingFactory.getInstance();
+    }
+
+    public IStrategyFactory checkingFactory() {
+        return CheckingFactory.getInstance();
+    }
+
+    static public void main(String args[]) {
         try {
-            // Add the following code if you want the Look and Feel
-            // to be set to the Look and Feel of the native system.
-
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
-            catch (Exception e) {
-            }
-
-            //Create a new instance of our application's frame, and make it visible.
-            view.setVisible(true);
+            catch (Exception e) {}
+            (new Application()).setVisible(true);
         }
         catch (Throwable t) {
             t.printStackTrace();
-            //Ensure the application exits with an error condition.
             System.exit(1);
         }
     }
