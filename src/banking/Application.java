@@ -1,6 +1,6 @@
 package banking;
 
-import framework.IStrategyFactory;
+import framework.Strategy.IStrategyFactory;
 import framework.ui.banking.BankFrm;
 
 import javax.swing.*;
@@ -14,13 +14,11 @@ public class Application extends BankFrm {
 
     public void addPanelHook(JPanel panel) {}
     public void addListenerHook(SymAction action) {}
-
-    public IStrategyFactory savingFactory() {
-        return SavingFactory.getInstance();
-    }
-
-    public IStrategyFactory checkingFactory() {
-        return CheckingFactory.getInstance();
+    public IStrategyFactory getFactory(AccountType type) {
+        return switch (type) {
+            case SAVING -> SavingFactory.getInstance();
+            case CHECKING -> CheckingFactory.getInstance();
+        };
     }
 
     static public void main(String args[]) {

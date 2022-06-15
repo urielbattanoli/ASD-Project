@@ -1,30 +1,52 @@
 package framework.ui.creditcard;
 
+import framework.*;
+import framework.Holder.AccountHolder;
+import framework.Holder.Address;
+import framework.Holder.PersonalHolder;
+import framework.ReportGenerator.IReportGenerator;
+import framework.Strategy.IStrategyFactory;
+import framework.ui.IMessenger;
+
 import java.awt.BorderLayout;
 
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 /**
  * A basic JFC based application.
  */
-public class CardFrm extends javax.swing.JFrame
-{
+
+
+public abstract class CardFrm extends javax.swing.JFrame implements IMessenger {
     /****
      * init variables in the object
      ****/
-    String clientName,street,city, zip, state,accountType,amountDeposit,expdate, ccnumber;
+    String clientName,street,city, zip, state,amountDeposit,expdate, ccnumber, email;
+	CardType accountType;
     boolean newaccount;
     private DefaultTableModel model;
     private JTable JTable1;
     private JScrollPane JScrollPane1;
     CardFrm thisframe;
     private Object rowdata[];
+	protected Service service;
+	protected IReportGenerator generator;
+
+	public CardFrm() {
+		this(new Service());
+	}
+
+	public CardFrm(Service service) {
+		this.service = service;
+		setupView();
+	}
+
+	public enum CardType {
+		GOLD, SILVER, BRONZE;
+	}
     
-	public CardFrm()
+	public void setupView()
 	{
 		thisframe=this;
 		
@@ -75,6 +97,7 @@ public class CardFrm extends javax.swing.JFrame
 		JButton_Exit.setText("Exit");
 		JPanel1.add(JButton_Exit);
 		JButton_Exit.setBounds(468,248,96,31);
+		addPanelHook(JPanel1);
 
 
 		JButton_GenBill.setActionCommand("jbutton");
@@ -87,37 +110,11 @@ public class CardFrm extends javax.swing.JFrame
 		JButton_GenBill.addActionListener(lSymAction);
 		JButton_Deposit.addActionListener(lSymAction);
 		JButton_Withdraw.addActionListener(lSymAction);
-		
+		addListenerHook(lSymAction);
 	}
 
-	
-	/*****************************************************
-	 * The entry point for this application.
-	 * Sets the Look and Feel to the System Look and Feel.
-	 * Creates a new JFrame1 and makes it visible.
-	 *****************************************************/
-	static public void main(String args[])
-	{
-		try {
-		    // Add the following code if you want the Look and Feel
-		    // to be set to the Look and Feel of the native system.
-		    
-		    try {
-		        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		    } 
-		    catch (Exception e) { 
-		    }
-		    
-			//Create a new instance of our application's frame, and make it visible.
-			(new CardFrm()).setVisible(true);
-		} 
-		catch (Throwable t) {
-			t.printStackTrace();
-			//Ensure the application exits with an error condition.
-			System.exit(1);
-		}
-	}
-
+	public void addPanelHook(JPanel panel) {}
+	public void addListenerHook(SymAction action) {}
 
 	javax.swing.JPanel JPanel1 = new javax.swing.JPanel();
 	javax.swing.JButton JButton_NewCCAccount = new javax.swing.JButton();
@@ -161,7 +158,7 @@ public class CardFrm extends javax.swing.JFrame
 		}
 	}
 
-	class SymAction implements java.awt.event.ActionListener
+	public class SymAction implements java.awt.event.ActionListener
 	{
 		public void actionPerformed(java.awt.event.ActionEvent event)
 		{
@@ -200,6 +197,7 @@ public class CardFrm extends javax.swing.JFrame
 		ccac.show();
 
 		if (newaccount){
+			createAccount();
             // add row to table
             rowdata[0] = clientName;
             rowdata[1] = ccnumber;
@@ -210,25 +208,29 @@ public class CardFrm extends javax.swing.JFrame
             JTable1.getSelectionModel().setAnchorSelectionIndex(-1);
             newaccount=false;
         }
-
-       
-        
     }
+
+	private void createAccount() {
+		Address address = new Address(street, city, state, zip);
+		AccountHolder holder = new PersonalHolder(address, email, clientName, "");
+		IStrategyFactory factory = getFactory(accountType);
+		service.createAccount(ccnumber, holder, factory, expdate);
+	}
+
+	public abstract IStrategyFactory getFactory(CardType type);
 
 	void JButtonGenerateBill_actionPerformed(java.awt.event.ActionEvent event)
 	{
-		JDialogGenBill billFrm = new JDialogGenBill();
+		JDialogGenBill billFrm = new JDialogGenBill(service.generateReport());
 		billFrm.setBounds(450, 20, 400, 350);
 		billFrm.show();
-	    
 	}
 
-	void JButtonDeposit_actionPerformed(java.awt.event.ActionEvent event)
-	{
+	void JButtonDeposit_actionPerformed(java.awt.event.ActionEvent event) {
 	    // get selected name
         int selection = JTable1.getSelectionModel().getMinSelectionIndex();
         if (selection >=0){
-            String name = (String)model.getValueAt(selection, 0);
+			String name = (String)model.getValueAt(selection, 0);
     	    
 		    //Show the dialog for adding deposit amount for the current mane
 		    JDialog_Deposit dep = new JDialog_Deposit(thisframe,name);
@@ -236,18 +238,14 @@ public class CardFrm extends javax.swing.JFrame
 		    dep.show();
     		
 		    // compute new amount
-            long deposit = Long.parseLong(amountDeposit);
-            String samount = (String)model.getValueAt(selection, 4);
-            long currentamount = Long.parseLong(samount);
-		    long newamount=currentamount+deposit;
-		    model.setValueAt(String.valueOf(newamount),selection, 4);
+			String ccNumber = (String)model.getValueAt(selection, 1);
+			long deposit = Long.parseLong(amountDeposit);
+			service.increaseAmount(ccNumber, deposit, "Deposit");
+			model.setValueAt(String.valueOf(service.getAccountBalance(ccNumber)), selection, 4);
 		}
-		
-		
 	}
 
-	void JButtonWithdraw_actionPerformed(java.awt.event.ActionEvent event)
-	{
+	void JButtonWithdraw_actionPerformed(java.awt.event.ActionEvent event) {
 	    // get selected name
         int selection = JTable1.getSelectionModel().getMinSelectionIndex();
         if (selection >=0){
@@ -259,17 +257,14 @@ public class CardFrm extends javax.swing.JFrame
 		    wd.show();
     		
 		    // compute new amount
-            long deposit = Long.parseLong(amountDeposit);
-            String samount = (String)model.getValueAt(selection, 4);
-            long currentamount = Long.parseLong(samount);
-		    long newamount=currentamount-deposit;
-		    model.setValueAt(String.valueOf(newamount),selection, 4);
-		    if (newamount <0){
-		       JOptionPane.showMessageDialog(JButton_Withdraw, " "+name+" Your balance is negative: $"+String.valueOf(newamount)+" !","Warning: negative balance",JOptionPane.WARNING_MESSAGE);
-		    }
+			long deposit = Long.parseLong(amountDeposit);
+			service.deductAmount(ccnumber, deposit, "Charge");
+			double newamount = service.getAccountBalance(ccnumber);
+			model.setValueAt(String.valueOf(newamount), selection, 4);
 		}
-		
-		
 	}
-	
+
+	public void showMessage(String title, String message) {
+		JOptionPane.showMessageDialog(JButton_Withdraw, message,title, JOptionPane.WARNING_MESSAGE);
+	}
 }

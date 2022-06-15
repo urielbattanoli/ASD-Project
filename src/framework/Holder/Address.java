@@ -1,4 +1,4 @@
-package framework;
+package framework.Holder;
 
 public class Address {
     private String street;

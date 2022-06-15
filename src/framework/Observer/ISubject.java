@@ -1,4 +1,4 @@
-package framework;
+package framework.Observer;
 
 public interface ISubject {
     void addObserver(IObserver observer);

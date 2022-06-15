@@ -143,8 +143,6 @@ public class JDialog_AddCCAccount extends javax.swing.JDialog
 				JRadioButtonSav_mouseClicked(event);
 			else if (object == JRadioButton_Bronze)
 				JRadioButtonBronze_mouseClicked(event);
-			
-			
 		}
 	}
 
@@ -191,13 +189,14 @@ public class JDialog_AddCCAccount extends javax.swing.JDialog
        parentframe.state=JTextField_ST.getText();
        parentframe.ccnumber=JTextField_CCNR.getText();
        parentframe.expdate=JTextField_ExpDate.getText();
+	   parentframe.email = JTextField_Email.getText();
        if (JRadioButton_Gold.isSelected())
-           parentframe.accountType="Gold";
+           parentframe.accountType= CardFrm.CardType.GOLD;
            else{
             if (JRadioButton_Silver.isSelected())
-                parentframe.accountType="Silver";
+                parentframe.accountType= CardFrm.CardType.SILVER;
                 else
-                parentframe.accountType="Bronze";
+                parentframe.accountType= CardFrm.CardType.BRONZE;
            }
            
 	   parentframe.newaccount=true;

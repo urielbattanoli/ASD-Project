@@ -1,4 +1,4 @@
-package framework;
+package framework.Strategy;
 
 public interface IMinimumPaymentStrategy {
     double calculatePayment(double balance);

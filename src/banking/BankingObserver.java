@@ -1,6 +1,9 @@
 package banking;
 
 import framework.*;
+import framework.Holder.CompanyHolder;
+import framework.Observer.IObserver;
+import framework.Observer.ISubject;
 import framework.ui.IMessenger;
 
 import java.util.List;

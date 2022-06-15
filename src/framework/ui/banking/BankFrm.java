@@ -1,6 +1,11 @@
 package framework.ui.banking;
 
 import framework.*;
+import framework.Holder.AccountHolder;
+import framework.Holder.Address;
+import framework.Holder.CompanyHolder;
+import framework.Holder.PersonalHolder;
+import framework.Strategy.IStrategyFactory;
 import framework.ui.IMessenger;
 
 import java.awt.*;
@@ -14,7 +19,8 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
     /****
      * init variables in the object
      ****/
-    String accountnr, clientName,street,city,zip,state,accountType,clientType,amountDeposit, email, employeesNumber, birthday;
+    String accountnr, clientName,street,city,zip,state,clientType,amountDeposit, email, employeesNumber, birthday;
+	AccountType accountType;
     boolean newaccount;
     private DefaultTableModel model;
     private JTable JTable1;
@@ -30,6 +36,10 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
 	public BankFrm(Service service) {
 		this.service = service;
 		setupView();
+	}
+
+	public enum AccountType {
+		SAVING, CHECKING;
 	}
 
 	private void setupView() {
@@ -204,24 +214,17 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
 		Address address = new Address(street, city, state, zip);
 
 		AccountHolder holder;
-		IStrategyFactory factory;
+		IStrategyFactory factory = getFactory(accountType);
 		if (clientType == "C") {
 			int empNum = Integer.parseInt(employeesNumber);
 			holder = new CompanyHolder(address, email, clientName, empNum);
 		} else {
 			holder = new PersonalHolder(address, email, clientName, birthday);
 		}
-		if(accountType == "S") {
-			factory = savingFactory();
-		} else {
-			factory = checkingFactory();
-		}
 		service.createAccount(accountnr, holder, factory);
 	}
 
-	public abstract IStrategyFactory savingFactory();
-
-	public abstract IStrategyFactory checkingFactory();
+	public abstract IStrategyFactory getFactory(AccountType type);
 
 	void JButtonCompAC_actionPerformed(java.awt.event.ActionEvent event) {
 		/*

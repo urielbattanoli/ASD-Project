@@ -179,9 +179,9 @@ public class JDialog_AddPAcc extends javax.swing.JDialog
 		parentframe.email=JTextField_EM.getText();
 		parentframe.birthday=JTextField_BD.getText();
        if (JRadioButton_Chk.isSelected())
-           parentframe.accountType="Ch";
+           parentframe.accountType= BankFrm.AccountType.CHECKING;
            else
-           parentframe.accountType="S";
+           parentframe.accountType= BankFrm.AccountType.SAVING;
 	   parentframe.newaccount=true;
        dispose();
 	}

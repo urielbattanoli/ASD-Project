@@ -1,4 +1,4 @@
-package framework;
+package framework.Holder;
 
 public class PersonalHolder extends AccountHolder {
 

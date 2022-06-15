@@ -1,8 +1,8 @@
 package creditcard;
 
-import framework.IInterestStrategy;
-import framework.IMinimumPaymentStrategy;
-import framework.IStrategyFactory;
+import framework.Strategy.IInterestStrategy;
+import framework.Strategy.IMinimumPaymentStrategy;
+import framework.Strategy.IStrategyFactory;
 
 public class GoldCardFactory implements IStrategyFactory {
 

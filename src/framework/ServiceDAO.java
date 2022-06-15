@@ -1,11 +1,11 @@
 package framework;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 public class ServiceDAO {
 
-    private Collection<Account> accountList = new ArrayList<Account>();
+    private List<Account> accountList = new ArrayList<Account>();
 
     public void saveAccount(Account account) {
         accountList.add(account);
@@ -28,7 +28,7 @@ public class ServiceDAO {
         return null;
     }
 
-    public Collection<Account> getAccounts() {
+    public List<Account> getAccounts() {
         return accountList;
     }
 }

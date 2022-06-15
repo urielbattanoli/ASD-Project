@@ -1,4 +1,4 @@
-package framework;
+package framework.Observer;
 
 public interface IObserver<T> {
     void deductDone(T object);

@@ -1,4 +1,4 @@
-package framework;
+package framework.Strategy;
 
 public interface IStrategyFactory {
     IMinimumPaymentStrategy paymentStrategy();
