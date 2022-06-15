@@ -27,10 +27,10 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
     private JScrollPane JScrollPane1;
     BankFrm myframe;
     private Object rowdata[];
-	protected Service service;
+	private Service service;
 
 	public BankFrm() {
-		this(new Service());
+		this(new Service(new ServiceFactory()));
 	}
     
 	public BankFrm(Service service) {
@@ -38,8 +38,31 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
 		setupView();
 	}
 
-	public enum AccountType {
-		SAVING, CHECKING;
+	public Service getService() {
+		return service;
+	}
+
+	public enum AccountType { SAVING, CHECKING; }
+	public void addPanelHook(JPanel panel) {}
+	public void addListenerHook(SymAction action) {}
+	public abstract IStrategyFactory getFactory(AccountType type);
+	public void showMessage(String title, String message) {
+		JOptionPane.showMessageDialog(JButton_Withdraw, message,title, JOptionPane.WARNING_MESSAGE);
+	}
+
+	private void createAccount() {
+		Address address = new Address(street, city, state, zip);
+
+		AccountHolder holder;
+		IStrategyFactory factory = getFactory(accountType);
+		if (clientType == "C") {
+			int empNum = Integer.parseInt(employeesNumber);
+			holder = new CompanyHolder(address, email, clientName, empNum);
+		} else {
+			holder = new PersonalHolder(address, email, clientName, birthday);
+		}
+		Account account = new Account(accountnr, holder, factory);
+		service.saveAccount(account);
 	}
 
 	private void setupView() {
@@ -113,9 +136,6 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
 		addListenerHook(lSymAction);
 	}
 
-	public void addPanelHook(JPanel panel) {}
-	public void addListenerHook(SymAction action) {}
-
 	javax.swing.JPanel JPanel1 = new javax.swing.JPanel();
 	javax.swing.JButton JButton_PerAC = new javax.swing.JButton();
 	javax.swing.JButton JButton_CompAC = new javax.swing.JButton();
@@ -124,18 +144,15 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
 	javax.swing.JButton JButton_Addinterest= new javax.swing.JButton();
 	javax.swing.JButton JButton_Exit = new javax.swing.JButton();
 
-	void exitApplication()
-	{
+	void exitApplication() {
 		try {
-		    	this.setVisible(false);    // hide the Frame
-		    	this.dispose();            // free the system resources
-		    	System.exit(0);            // close the application
-		} catch (Exception e) {
-		}
+			this.setVisible(false);    // hide the Frame
+			this.dispose();            // free the system resources
+			System.exit(0);            // close the application
+		} catch (Exception e) {}
 	}
 
-	class SymWindow extends java.awt.event.WindowAdapter
-	{
+	class SymWindow extends java.awt.event.WindowAdapter {
 		public void windowClosing(java.awt.event.WindowEvent event)
 		{
 			Object object = event.getSource();
@@ -144,23 +161,20 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
 		}
 	}
 
-	void BankFrm_windowClosing(java.awt.event.WindowEvent event)
-	{
+	private void BankFrm_windowClosing(java.awt.event.WindowEvent event) {
 		// to do: code goes here.
 			 
 		BankFrm_windowClosing_Interaction1(event);
 	}
 
-	void BankFrm_windowClosing_Interaction1(java.awt.event.WindowEvent event) {
+	private void BankFrm_windowClosing_Interaction1(java.awt.event.WindowEvent event) {
 		try {
 			this.exitApplication();
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {}
 	}
 
 	public class SymAction implements java.awt.event.ActionListener {
-		public void actionPerformed(java.awt.event.ActionEvent event)
-		{
+		public void actionPerformed(java.awt.event.ActionEvent event) {
 			Object object = event.getSource();
 			if (object == JButton_Exit)
 				JButtonExit_actionPerformed(event);
@@ -179,12 +193,12 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
     
     //When the Exit button is pressed this code gets executed
     //this will exit from the system
-    void JButtonExit_actionPerformed(java.awt.event.ActionEvent event)
+    private void JButtonExit_actionPerformed(java.awt.event.ActionEvent event)
 	{
 		System.exit(0);
 	}
 
-	void JButtonPerAC_actionPerformed(java.awt.event.ActionEvent event) {
+	private void JButtonPerAC_actionPerformed(java.awt.event.ActionEvent event) {
 		/*
 		 JDialog_AddPAcc type object is for adding personal information
 		 construct a JDialog_AddPAcc type object 
@@ -210,23 +224,7 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
         }
     }
 
-	private void createAccount() {
-		Address address = new Address(street, city, state, zip);
-
-		AccountHolder holder;
-		IStrategyFactory factory = getFactory(accountType);
-		if (clientType == "C") {
-			int empNum = Integer.parseInt(employeesNumber);
-			holder = new CompanyHolder(address, email, clientName, empNum);
-		} else {
-			holder = new PersonalHolder(address, email, clientName, birthday);
-		}
-		service.createAccount(accountnr, holder, factory);
-	}
-
-	public abstract IStrategyFactory getFactory(AccountType type);
-
-	void JButtonCompAC_actionPerformed(java.awt.event.ActionEvent event) {
+	private void JButtonCompAC_actionPerformed(java.awt.event.ActionEvent event) {
 		/*
 		 construct a JDialog_AddCompAcc type object 
 		 set the boundaries and 
@@ -250,11 +248,9 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
             JTable1.getSelectionModel().setAnchorSelectionIndex(-1);
             newaccount=false;
         }
-
 	}
 
-	void JButtonDeposit_actionPerformed(java.awt.event.ActionEvent event)
-	{
+	private void JButtonDeposit_actionPerformed(java.awt.event.ActionEvent event) {
 	    // get selected name
         int selection = JTable1.getSelectionModel().getMinSelectionIndex();
         if (selection >=0){
@@ -272,8 +268,7 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
 		}
 	}
 
-	void JButtonWithdraw_actionPerformed(java.awt.event.ActionEvent event)
-	{
+	private void JButtonWithdraw_actionPerformed(java.awt.event.ActionEvent event) {
 	    // get selected name
         int selection = JTable1.getSelectionModel().getMinSelectionIndex();
         if (selection >=0){
@@ -291,13 +286,8 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
 		    model.setValueAt(String.valueOf(newamount), selection, 5);
 		}
 	}
-
-	public void showMessage(String title, String message) {
-		JOptionPane.showMessageDialog(JButton_Withdraw, message,title, JOptionPane.WARNING_MESSAGE);
-	}
 	
-	void JButtonAddinterest_actionPerformed(java.awt.event.ActionEvent event)
-	{
+	private void JButtonAddinterest_actionPerformed(java.awt.event.ActionEvent event) {
 		service.addInterest();
 		int count = model.getRowCount();
 		for(int i = 0; i < count; i++) {

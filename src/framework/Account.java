@@ -6,7 +6,7 @@ import framework.Strategy.IStrategyFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Account {
+public class Account implements IAccount {
 
     private String id;
     private AccountHolder holder;
@@ -43,16 +43,16 @@ public class Account {
         entryList.add(entry);
     }
 
-    private void addEntry(Entry entry) {
-        entryList.add(entry);
-    }
-
     public void transferFunds(Account toAccount, double amount, String description) {
         Entry fromEntry = new Entry(-amount, description, toAccount.getId(), toAccount.getHolder().getName());
         Entry toEntry = new Entry(amount, description, getId(), getHolder().getName());
 
         entryList.add(fromEntry);
         toAccount.addEntry(toEntry);
+    }
+
+    private void addEntry(Entry entry) {
+        entryList.add(entry);
     }
 
     public AccountHolder getHolder() {
@@ -69,7 +69,7 @@ public class Account {
 
     public void addInterest() {
         double balance = getBalance();
-        double amount = factory.InterestStrategy().calculateInterest(balance);
+        double amount = factory.interestStrategy().calculateInterest(balance);
         Entry entry = new Entry(amount, "interest", "", "");
         entryList.add(entry);
     }

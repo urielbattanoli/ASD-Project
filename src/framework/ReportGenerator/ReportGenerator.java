@@ -4,11 +4,11 @@ import framework.Account;
 import framework.Holder.AccountHolder;
 import framework.Entry;
 
-import java.util.Collection;
+import java.util.List;
 
 public class ReportGenerator implements IReportGenerator {
 
-    public String generateReport(Collection<Account> list) {
+    public String generateReport(List<Account> list) {
         String result = "";
         for (Account account : list) {
             AccountHolder customer = account.getHolder();

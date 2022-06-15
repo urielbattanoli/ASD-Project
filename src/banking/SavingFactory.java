@@ -14,7 +14,7 @@ public class SavingFactory implements IStrategyFactory {
         return (balance) -> balance * .1;
     }
 
-    public IInterestStrategy InterestStrategy() {
+    public IInterestStrategy interestStrategy() {
         return (balance) -> balance < 1000 ? balance * .01 : balance > 5000 ? balance * .04 : balance * .02;
     }
 

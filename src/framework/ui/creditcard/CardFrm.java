@@ -34,7 +34,7 @@ public abstract class CardFrm extends javax.swing.JFrame implements IMessenger {
 	protected IReportGenerator generator;
 
 	public CardFrm() {
-		this(new Service());
+		this(new Service(new ServiceFactory()));
 	}
 
 	public CardFrm(Service service) {
@@ -42,12 +42,23 @@ public abstract class CardFrm extends javax.swing.JFrame implements IMessenger {
 		setupView();
 	}
 
-	public enum CardType {
-		GOLD, SILVER, BRONZE;
+	public enum CardType { GOLD, SILVER, BRONZE; }
+	public void addPanelHook(JPanel panel) {}
+	public void addListenerHook(SymAction action) {}
+	public abstract IStrategyFactory getFactory(CardType type);
+	public void showMessage(String title, String message) {
+		JOptionPane.showMessageDialog(JButton_Withdraw, message,title, JOptionPane.WARNING_MESSAGE);
+	}
+
+	public void createAccount() {
+		Address address = new Address(street, city, state, zip);
+		AccountHolder holder = new PersonalHolder(address, email, clientName, "");
+		IStrategyFactory factory = getFactory(accountType);
+		Account account = new CreditAccount(ccnumber, holder, factory, expdate);
+		service.saveAccount(account);
 	}
     
-	public void setupView()
-	{
+	private void setupView() {
 		thisframe=this;
 		
 		setTitle("Credit-card processing Application.");
@@ -113,9 +124,6 @@ public abstract class CardFrm extends javax.swing.JFrame implements IMessenger {
 		addListenerHook(lSymAction);
 	}
 
-	public void addPanelHook(JPanel panel) {}
-	public void addListenerHook(SymAction action) {}
-
 	javax.swing.JPanel JPanel1 = new javax.swing.JPanel();
 	javax.swing.JButton JButton_NewCCAccount = new javax.swing.JButton();
 	javax.swing.JButton JButton_GenBill = new javax.swing.JButton();
@@ -124,8 +132,7 @@ public abstract class CardFrm extends javax.swing.JFrame implements IMessenger {
 	javax.swing.JButton JButton_Exit = new javax.swing.JButton();
 
 
-	void exitApplication()
-	{
+	private void exitApplication() {
 		try {
 		    	this.setVisible(false);    // hide the Frame
 		    	this.dispose();            // free the system resources
@@ -134,8 +141,7 @@ public abstract class CardFrm extends javax.swing.JFrame implements IMessenger {
 		}
 	}
 
-	class SymWindow extends java.awt.event.WindowAdapter
-	{
+	class SymWindow extends java.awt.event.WindowAdapter {
 		public void windowClosing(java.awt.event.WindowEvent event)
 		{
 			Object object = event.getSource();
@@ -144,22 +150,20 @@ public abstract class CardFrm extends javax.swing.JFrame implements IMessenger {
 		}
 	}
 
-	void BankFrm_windowClosing(java.awt.event.WindowEvent event)
-	{
+	private void BankFrm_windowClosing(java.awt.event.WindowEvent event) {
 		// to do: code goes here.
 			 
 		BankFrm_windowClosing_Interaction1(event);
 	}
 
-	void BankFrm_windowClosing_Interaction1(java.awt.event.WindowEvent event) {
+	private void BankFrm_windowClosing_Interaction1(java.awt.event.WindowEvent event) {
 		try {
 			this.exitApplication();
 		} catch (Exception e) {
 		}
 	}
 
-	public class SymAction implements java.awt.event.ActionListener
-	{
+	public class SymAction implements java.awt.event.ActionListener {
 		public void actionPerformed(java.awt.event.ActionEvent event)
 		{
 			Object object = event.getSource();
@@ -179,13 +183,12 @@ public abstract class CardFrm extends javax.swing.JFrame implements IMessenger {
     
     //When the Exit button is pressed this code gets executed
     //this will exit from the system
-    void JButtonExit_actionPerformed(java.awt.event.ActionEvent event)
+    private void JButtonExit_actionPerformed(java.awt.event.ActionEvent event)
 	{
 		System.exit(0);
 	}
 
-	void JButtonNewCCAC_actionPerformed(java.awt.event.ActionEvent event)
-	{
+	private void JButtonNewCCAC_actionPerformed(java.awt.event.ActionEvent event) {
 		/*
 		 JDialog_AddPAcc type object is for adding personal information
 		 construct a JDialog_AddPAcc type object 
@@ -210,23 +213,13 @@ public abstract class CardFrm extends javax.swing.JFrame implements IMessenger {
         }
     }
 
-	private void createAccount() {
-		Address address = new Address(street, city, state, zip);
-		AccountHolder holder = new PersonalHolder(address, email, clientName, "");
-		IStrategyFactory factory = getFactory(accountType);
-		service.createAccount(ccnumber, holder, factory, expdate);
-	}
-
-	public abstract IStrategyFactory getFactory(CardType type);
-
-	void JButtonGenerateBill_actionPerformed(java.awt.event.ActionEvent event)
-	{
+	private void JButtonGenerateBill_actionPerformed(java.awt.event.ActionEvent event) {
 		JDialogGenBill billFrm = new JDialogGenBill(service.generateReport());
 		billFrm.setBounds(450, 20, 400, 350);
 		billFrm.show();
 	}
 
-	void JButtonDeposit_actionPerformed(java.awt.event.ActionEvent event) {
+	private void JButtonDeposit_actionPerformed(java.awt.event.ActionEvent event) {
 	    // get selected name
         int selection = JTable1.getSelectionModel().getMinSelectionIndex();
         if (selection >=0){
@@ -245,7 +238,7 @@ public abstract class CardFrm extends javax.swing.JFrame implements IMessenger {
 		}
 	}
 
-	void JButtonWithdraw_actionPerformed(java.awt.event.ActionEvent event) {
+	private void JButtonWithdraw_actionPerformed(java.awt.event.ActionEvent event) {
 	    // get selected name
         int selection = JTable1.getSelectionModel().getMinSelectionIndex();
         if (selection >=0){
@@ -262,9 +255,5 @@ public abstract class CardFrm extends javax.swing.JFrame implements IMessenger {
 			double newamount = service.getAccountBalance(ccnumber);
 			model.setValueAt(String.valueOf(newamount), selection, 4);
 		}
-	}
-
-	public void showMessage(String title, String message) {
-		JOptionPane.showMessageDialog(JButton_Withdraw, message,title, JOptionPane.WARNING_MESSAGE);
 	}
 }

@@ -1,20 +1,24 @@
 package framework;
 
-import framework.Holder.AccountHolder;
 import framework.Observer.IObserver;
-import framework.Observer.ISubject;
 import framework.ReportGenerator.*;
-import framework.Strategy.IStrategyFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class Service implements ISubject {
+public class Service implements IService {
 
-    private ServiceDAO dao = new ServiceDAO();
-    private IReportGenerator generator = new ReportGenerator();
+    private DAO dao;
+    private IReportGenerator generator;
+    private IAccountCreator accCreator;
     private List<IObserver> observers = new ArrayList<>();
+
+    public Service(IServiceFactory factory) {
+        dao = factory.createDAO();
+        generator = factory.createGenerator();
+        accCreator = factory.createAccountCreator();
+    }
 
     public void setDao(ServiceDAO dao) {
         this.dao = dao;
@@ -24,16 +28,8 @@ public class Service implements ISubject {
         this.generator = generator;
     }
 
-    public Account createAccount(String id, AccountHolder holder, IStrategyFactory factory) {
-        Account account = new Account(id, holder, factory);
+    public void saveAccount(Account account) {
         dao.saveAccount(account);
-        return account;
-    }
-
-    public Account createAccount(String id, AccountHolder holder, IStrategyFactory factory, String expDate) {
-        Account account = new CreditAccount(id, holder, factory, expDate);
-        dao.saveAccount(account);
-        return account;
     }
 
     public double getAccountBalance(String id) {

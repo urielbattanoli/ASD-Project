@@ -87,6 +87,7 @@ public class JDialog_Withdraw extends javax.swing.JDialog
 
 	void JButtonCalcel_actionPerformed(java.awt.event.ActionEvent event)
 	{
+		parentframe.amountDeposit = "0";
 		dispose();
 	}
 }

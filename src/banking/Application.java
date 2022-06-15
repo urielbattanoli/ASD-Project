@@ -1,5 +1,10 @@
 package banking;
 
+import framework.Account;
+import framework.Holder.AccountHolder;
+import framework.Holder.Address;
+import framework.Holder.CompanyHolder;
+import framework.Holder.PersonalHolder;
 import framework.Strategy.IStrategyFactory;
 import framework.ui.banking.BankFrm;
 
@@ -9,11 +14,12 @@ public class Application extends BankFrm {
 
     public Application() {
         super();
-        new BankingObserver(service, this);
+        new BankingObserver(getService(), this);
     }
 
     public void addPanelHook(JPanel panel) {}
     public void addListenerHook(SymAction action) {}
+
     public IStrategyFactory getFactory(AccountType type) {
         return switch (type) {
             case SAVING -> SavingFactory.getInstance();

@@ -14,7 +14,7 @@ public class BronzeCardFactory implements IStrategyFactory {
         return (balance) -> balance * .1;
     }
 
-    public IInterestStrategy InterestStrategy() {
+    public IInterestStrategy interestStrategy() {
         return (balance) -> balance * .06;
     }
 

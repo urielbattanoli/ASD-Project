@@ -14,7 +14,7 @@ public class CheckingFactory implements IStrategyFactory {
         return (balance) -> balance * .1;
     }
 
-    public IInterestStrategy InterestStrategy() {
+    public IInterestStrategy interestStrategy() {
         return (balance) -> balance < 1000 ? balance * .015 : balance * .025;
     }
 
