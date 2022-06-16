@@ -1,6 +1,7 @@
 package framework;
 
 import framework.Holder.AccountHolder;
+import framework.Strategy.IMinimumPaymentStrategy;
 import framework.Strategy.IStrategyFactory;
 
 import java.util.ArrayList;
@@ -73,8 +74,16 @@ public class Account implements IAccount {
         Entry entry = new Entry(amount, "interest", "", "");
         entryList.add(entry);
     }
-
+    public double getMinimumPayment(){
+        return factory.paymentStrategy().calculatePayment(this.getBalance());
+    }
+    public double getMonthlyInterest(){
+        return factory.interestStrategy().calculateInterest(this.getBalance());
+    }
     public void setFactory(IStrategyFactory factory) {
         this.factory = factory;
+    }
+    public IStrategyFactory getFactory(IStrategyFactory factory) {
+        return factory;
     }
 }
