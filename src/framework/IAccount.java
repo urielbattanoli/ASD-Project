@@ -18,4 +18,6 @@ public interface IAccount {
     List<Entry> getEntryList();
     void addInterest();
     void setFactory(IStrategyFactory factory);
+    public double getMinimumPayment();
+    public double getMonthlyInterest();
 }
