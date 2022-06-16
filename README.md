@@ -4,7 +4,7 @@
 
 ## How to use:
 
-We provide almost all concrete classes as a default option to use our framework, but you can create you own concrete ones implementing our interfaces and use them instead.
+We provide almost all concrete classes as a default option to use our framework, but you can create you own concrete classes implementing our interfaces and use them instead.
 
 1. You need to extend from the BankFrm(banking version) or CardFrm(credit card version).
 ```java

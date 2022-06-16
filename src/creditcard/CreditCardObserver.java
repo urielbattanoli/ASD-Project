@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CreditCardObserver implements IObserver<Account> {
 
-    private double LIMIT_AMOUNT = 500;
+    private double LIMIT_AMOUNT = 400;
     private ISubject subject;
     private IMessenger messenger;
 
@@ -29,7 +29,7 @@ public class CreditCardObserver implements IObserver<Account> {
     public void deductUpdate(Account object) {
         List<Entry> list = object.getEntryList();
         Entry last = list.get(list.size() - 1);
-        if (object.getBalance() < 0 || last.getAmount() > LIMIT_AMOUNT) {
+        if (last.getAmount() > LIMIT_AMOUNT) {
             messenger.showMessage("Personal account changed", "Withdraw was made");
         }
         sendEmail(object);

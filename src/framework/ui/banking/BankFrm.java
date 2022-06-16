@@ -61,7 +61,7 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
 		} else {
 			holder = new PersonalHolder(address, email, clientName, birthday);
 		}
-		Account account = new Account(accountnr, holder, factory);
+		IAccount account = new Account(accountnr, holder, factory);
 		service.saveAccount(account);
 	}
 
