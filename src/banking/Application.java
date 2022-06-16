@@ -9,6 +9,7 @@ public class Application extends BankFrm {
 
     public Application() {
         super();
+
         setup();
     }
 

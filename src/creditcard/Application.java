@@ -14,8 +14,8 @@ public class Application extends CardFrm {
     }
 
     private void setup() {
-        new CreditCardObserver(service, this);
-        service.setGenerator(new CreditCardGenerator());
+        new CreditCardObserver(getService(), this);
+        getService().setGenerator(new CreditCardGenerator());
     }
 
     public void addPanelHook(JPanel panel) {}

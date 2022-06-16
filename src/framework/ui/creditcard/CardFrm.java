@@ -30,7 +30,7 @@ public abstract class CardFrm extends javax.swing.JFrame implements IMessenger {
     private JScrollPane JScrollPane1;
     CardFrm thisframe;
     private Object rowdata[];
-	protected Service service;
+	private Service service;
 	protected IReportGenerator generator;
 
 	public CardFrm() {
@@ -40,6 +40,10 @@ public abstract class CardFrm extends javax.swing.JFrame implements IMessenger {
 	public CardFrm(Service service) {
 		this.service = service;
 		setupView();
+	}
+
+	public Service getService() {
+		return service;
 	}
 
 	public enum CardType { GOLD, SILVER, BRONZE; }
