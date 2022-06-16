@@ -11,11 +11,11 @@ public class SilverCardFactory implements IStrategyFactory {
     private SilverCardFactory() {}
 
     public IMinimumPaymentStrategy paymentStrategy() {
-        return (balance) -> balance * .14;
+        return () -> .14;
     }
 
     public IInterestStrategy interestStrategy() {
-        return (balance) -> balance * .1;
+        return (balance) -> .1;
     }
 
     public static IStrategyFactory getInstance() {

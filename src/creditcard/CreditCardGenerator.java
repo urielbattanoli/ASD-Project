@@ -34,7 +34,7 @@ public class CreditCardGenerator implements IReportGenerator {
 
             double MI=a.getMonthlyInterest();
             double MP=a.getMinimumPayment();
-            double newBalance=previousBalance-totalCredit+totalCharges+MI*(previousBalance-totalCredit);
+            double newBalance= previousBalance - totalCredit + totalCharges + MI * (previousBalance - totalCredit);
             double totalDue=MP*newBalance;
 
             report+="\n"+a.getId()+" Billing Report ("+LocalDate.now().getMonth()+"-"+LocalDate.now().getYear()+")";

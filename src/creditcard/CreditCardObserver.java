@@ -29,7 +29,7 @@ public class CreditCardObserver implements IObserver<Account> {
     public void deductUpdate(Account object) {
         List<Entry> list = object.getEntryList();
         Entry last = list.get(list.size() - 1);
-        if (last.getAmount() > LIMIT_AMOUNT) {
+        if (last.getAmount() < -LIMIT_AMOUNT) {
             messenger.showMessage("Personal account changed", "Withdraw was made and we send an email");
             sendEmail(object);
         }

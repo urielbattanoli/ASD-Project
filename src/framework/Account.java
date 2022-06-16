@@ -70,19 +70,23 @@ public class Account implements IAccount {
 
     public void addInterest() {
         double balance = getBalance();
-        double amount = factory.interestStrategy().calculateInterest(balance);
+        double amount = factory.interestStrategy().calculateInterest(balance) * balance;
         Entry entry = new Entry(amount, "interest", "", "");
         entryList.add(entry);
     }
-    public double getMinimumPayment(){
-        return factory.paymentStrategy().calculatePayment(this.getBalance());
+
+    public double getMinimumPayment() {
+        return factory.paymentStrategy().calculatePayment();
     }
-    public double getMonthlyInterest(){
-        return factory.interestStrategy().calculateInterest(this.getBalance());
+
+    public double getMonthlyInterest() {
+        return factory.interestStrategy().calculateInterest(getBalance());
     }
+
     public void setFactory(IStrategyFactory factory) {
         this.factory = factory;
     }
+
     public IStrategyFactory getFactory(IStrategyFactory factory) {
         return factory;
     }

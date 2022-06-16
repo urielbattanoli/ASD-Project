@@ -11,11 +11,11 @@ public class GoldCardFactory implements IStrategyFactory {
     private GoldCardFactory() {}
 
     public IMinimumPaymentStrategy paymentStrategy() {
-        return (balance) -> balance * .12;
+        return () -> .12;
     }
 
     public IInterestStrategy interestStrategy() {
-        return (balance) -> balance * .08;
+        return (balance) -> .08;
     }
 
     public static IStrategyFactory getInstance() {

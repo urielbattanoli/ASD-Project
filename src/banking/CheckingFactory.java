@@ -11,11 +11,11 @@ public class CheckingFactory implements IStrategyFactory {
     private CheckingFactory() {}
 
     public IMinimumPaymentStrategy paymentStrategy() {
-        return (balance) -> balance * .1;
+        return () -> .1;
     }
 
     public IInterestStrategy interestStrategy() {
-        return (balance) -> balance < 1000 ? balance * .015 : balance * .025;
+        return (balance) -> balance < 1000 ? .015 : .025;
     }
 
     public static IStrategyFactory getInstance() {
