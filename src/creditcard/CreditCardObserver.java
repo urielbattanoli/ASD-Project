@@ -30,9 +30,9 @@ public class CreditCardObserver implements IObserver<Account> {
         List<Entry> list = object.getEntryList();
         Entry last = list.get(list.size() - 1);
         if (last.getAmount() > LIMIT_AMOUNT) {
-            messenger.showMessage("Personal account changed", "Withdraw was made");
+            messenger.showMessage("Personal account changed", "Withdraw was made and we send an email");
+            sendEmail(object);
         }
-        sendEmail(object);
     }
 
     public void increaseUpdate(Account object) {

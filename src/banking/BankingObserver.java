@@ -34,6 +34,7 @@ public class BankingObserver implements IObserver<IAccount> {
     public void deductUpdate(IAccount object) {
         if (isCompany(object)) {
             messenger.showMessage("Company account changed", "Withdraw was made and we send an email");
+            sendEmail(object);
             return;
         }
 
@@ -41,13 +42,14 @@ public class BankingObserver implements IObserver<IAccount> {
         Entry last = list.get(list.size() - 1);
         if (object.getBalance() < 0 || last.getAmount() > LIMIT_AMOUNT) {
             messenger.showMessage("Personal account changed", "Withdraw was made and we send an email");
+            sendEmail(object);
         }
-        sendEmail(object);
     }
 
     public void increaseUpdate(IAccount object) {
         if (isCompany(object)) {
             messenger.showMessage("Company account changed", "Deposit was made and we send an email");
+            sendEmail(object);
             return;
         }
 
@@ -55,6 +57,7 @@ public class BankingObserver implements IObserver<IAccount> {
         Entry last = list.get(list.size() - 1);
         if (object.getBalance() < 0 || last.getAmount() > LIMIT_AMOUNT) {
             messenger.showMessage("Personal account changed", "Deposit was made and we send an email");
+            sendEmail(object);
         }
     }
 
