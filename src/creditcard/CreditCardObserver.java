@@ -26,7 +26,7 @@ public class CreditCardObserver implements IObserver<Account> {
     private void sendEmail(Account object) {
     }
 
-    public void deductDone(Account object) {
+    public void deductUpdate(Account object) {
         List<Entry> list = object.getEntryList();
         Entry last = list.get(list.size() - 1);
         if (object.getBalance() < 0 || last.getAmount() > LIMIT_AMOUNT) {
@@ -35,11 +35,11 @@ public class CreditCardObserver implements IObserver<Account> {
         sendEmail(object);
     }
 
-    public void increaseDone(Account object) {
+    public void increaseUpdate(Account object) {
         //Do nothing
     }
 
-    public void transferDone(Account object) {
+    public void transferUpdate(Account object) {
         //Do nothing
     }
 }

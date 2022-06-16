@@ -3,7 +3,7 @@ package framework;
 import java.util.ArrayList;
 import java.util.List;
 
-class ServiceDAO implements DAO {
+public class ServiceDAO implements DAO {
 
     private List<IAccount> accountList = new ArrayList<>();
 

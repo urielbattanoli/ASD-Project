@@ -14,6 +14,10 @@ public class Application extends BankFrm {
 
     public Application() {
         super();
+        setup();
+    }
+
+    private void setup() {
         new BankingObserver(getService(), this);
     }
 

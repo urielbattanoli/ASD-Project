@@ -8,7 +8,7 @@ import framework.ui.IMessenger;
 
 import java.util.List;
 
-public class BankingObserver implements IObserver<Account> {
+public class BankingObserver implements IObserver<IAccount> {
 
     private double LIMIT_AMOUNT = 500;
     private ISubject subject;
@@ -24,41 +24,41 @@ public class BankingObserver implements IObserver<Account> {
         subject.removeObserver(this);
     }
 
-    private boolean isCompany(Account account) {
+    private boolean isCompany(IAccount account) {
         return account.getHolder().getClass() == CompanyHolder.class;
     }
 
-    private void sendEmail(Account object) {
+    private void sendEmail(IAccount object) {
     }
 
-    public void deductDone(Account object) {
+    public void deductUpdate(IAccount object) {
         if (isCompany(object)) {
-            messenger.showMessage("Company account changed", "Withdraw was made");
+            messenger.showMessage("Company account changed", "Withdraw was made and we send an email");
             return;
         }
 
         List<Entry> list = object.getEntryList();
         Entry last = list.get(list.size() - 1);
         if (object.getBalance() < 0 || last.getAmount() > LIMIT_AMOUNT) {
-            messenger.showMessage("Personal account changed", "Withdraw was made");
+            messenger.showMessage("Personal account changed", "Withdraw was made and we send an email");
         }
         sendEmail(object);
     }
 
-    public void increaseDone(Account object) {
+    public void increaseUpdate(IAccount object) {
         if (isCompany(object)) {
-            messenger.showMessage("Company account changed", "Deposit was made");
+            messenger.showMessage("Company account changed", "Deposit was made and we send an email");
             return;
         }
 
         List<Entry> list = object.getEntryList();
         Entry last = list.get(list.size() - 1);
         if (object.getBalance() < 0 || last.getAmount() > LIMIT_AMOUNT) {
-            messenger.showMessage("Personal account changed", "Deposit was made");
+            messenger.showMessage("Personal account changed", "Deposit was made and we send an email");
         }
     }
 
-    public void transferDone(Account object) {
+    public void transferUpdate(IAccount object) {
         //Do nothing
     }
 }

@@ -38,14 +38,14 @@ public class Service implements IService {
         IAccount account = dao.loadAccount(id);
         account.increase(amount, description);
         dao.updateAccount(account);
-        observers.forEach(observer -> observer.increaseDone(account));
+        observers.forEach(observer -> observer.increaseUpdate(account));
     }
 
     public void deductAmount(String id, double amount, String description) {
         IAccount account = dao.loadAccount(id);
         account.deduct(amount, description);
         dao.updateAccount(account);
-        observers.forEach(observer -> observer.deductDone(account));
+        observers.forEach(observer -> observer.deductUpdate(account));
     }
 
     public void transfer(String fromId, String toId, double amount, String description) {
@@ -54,8 +54,8 @@ public class Service implements IService {
         fromAccount.transferFunds(toAccount, amount, description);
         dao.updateAccount(fromAccount);
         dao.updateAccount(toAccount);
-        observers.forEach(observer -> observer.transferDone(fromAccount));
-        observers.forEach(observer -> observer.transferDone(toAccount));
+        observers.forEach(observer -> observer.transferUpdate(fromAccount));
+        observers.forEach(observer -> observer.transferUpdate(toAccount));
     }
 
     public void addInterest() {

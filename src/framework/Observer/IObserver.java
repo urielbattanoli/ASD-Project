@@ -1,7 +1,7 @@
 package framework.Observer;
 
 public interface IObserver<T> {
-    void deductDone(T object);
-    void increaseDone(T object);
-    void transferDone(T object);
+    void deductUpdate(T object);
+    void increaseUpdate(T object);
+    void transferUpdate(T object);
 }
