@@ -1,10 +1,5 @@
 package banking;
 
-import framework.Account;
-import framework.Holder.AccountHolder;
-import framework.Holder.Address;
-import framework.Holder.CompanyHolder;
-import framework.Holder.PersonalHolder;
 import framework.Strategy.IStrategyFactory;
 import framework.ui.banking.BankFrm;
 
