@@ -8,7 +8,7 @@ public interface IService extends ISubject {
 
     void setDao(ServiceDAO dao);
     void setGenerator(IReportGenerator generator);
-    void saveAccount(Account account);
+    void saveAccount(IAccount account);
     double getAccountBalance(String id);
     void increaseAmount(String id, double amount, String description);
     void deductAmount(String id, double amount, String description);

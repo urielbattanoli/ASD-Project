@@ -5,22 +5,22 @@ import java.util.List;
 
 class ServiceDAO implements DAO {
 
-    private List<Account> accountList = new ArrayList<Account>();
+    private List<IAccount> accountList = new ArrayList<>();
 
-    public void saveAccount(Account account) {
+    public void saveAccount(IAccount account) {
         accountList.add(account);
     }
 
-    public void updateAccount(Account account) {
-        Account accountExist = loadAccount(account.getId());
+    public void updateAccount(IAccount account) {
+        IAccount accountExist = loadAccount(account.getId());
         if (accountExist != null) {
             accountList.remove(accountExist);
             accountList.add(account);
         }
     }
 
-    public Account loadAccount(String id) {
-        for (Account account : accountList) {
+    public IAccount loadAccount(String id) {
+        for (IAccount account : accountList) {
             if (account.getId() == id) {
                 return account;
             }
@@ -28,7 +28,7 @@ class ServiceDAO implements DAO {
         return null;
     }
 
-    public List<Account> getAccounts() {
+    public List<IAccount> getAccounts() {
         return accountList;
     }
 }

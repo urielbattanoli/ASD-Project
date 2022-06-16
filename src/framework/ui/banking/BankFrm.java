@@ -50,7 +50,7 @@ public abstract class BankFrm extends javax.swing.JFrame implements IMessenger {
 		JOptionPane.showMessageDialog(JButton_Withdraw, message,title, JOptionPane.WARNING_MESSAGE);
 	}
 
-	private void createAccount() {
+	public void createAccount() {
 		Address address = new Address(street, city, state, zip);
 
 		AccountHolder holder;

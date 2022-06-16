@@ -43,7 +43,7 @@ public class Account implements IAccount {
         entryList.add(entry);
     }
 
-    public void transferFunds(Account toAccount, double amount, String description) {
+    public void transferFunds(IAccount toAccount, double amount, String description) {
         Entry fromEntry = new Entry(-amount, description, toAccount.getId(), toAccount.getHolder().getName());
         Entry toEntry = new Entry(amount, description, getId(), getHolder().getName());
 
@@ -51,7 +51,7 @@ public class Account implements IAccount {
         toAccount.addEntry(toEntry);
     }
 
-    private void addEntry(Entry entry) {
+    public void addEntry(Entry entry) {
         entryList.add(entry);
     }
 

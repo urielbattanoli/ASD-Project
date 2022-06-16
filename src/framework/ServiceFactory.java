@@ -11,8 +11,4 @@ public class ServiceFactory implements IServiceFactory {
     public IReportGenerator createGenerator() {
         return new ReportGenerator();
     }
-
-    public IAccountCreator createAccountCreator() {
-        return null;
-    }
 }

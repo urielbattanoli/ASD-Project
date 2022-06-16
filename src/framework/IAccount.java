@@ -11,7 +11,8 @@ public interface IAccount {
     double getBalance();
     void increase(double amount, String description);
     void deduct(double amount, String description);
-    void transferFunds(Account toAccount, double amount, String description);
+    void transferFunds(IAccount toAccount, double amount, String description);
+    void addEntry(Entry entry);
     AccountHolder getHolder();
     void setHolder(AccountHolder holder);
     List<Entry> getEntryList();

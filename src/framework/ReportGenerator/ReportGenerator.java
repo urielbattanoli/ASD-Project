@@ -1,16 +1,16 @@
 package framework.ReportGenerator;
 
-import framework.Account;
 import framework.Holder.AccountHolder;
 import framework.Entry;
+import framework.IAccount;
 
 import java.util.List;
 
 public class ReportGenerator implements IReportGenerator {
 
-    public String generateReport(List<Account> list) {
+    public String generateReport(List<IAccount> list) {
         String result = "";
-        for (Account account : list) {
+        for (IAccount account : list) {
             AccountHolder customer = account.getHolder();
             result += "\nStatement for Account: " + account.getId();
             result += "\nAccount Holder: " + customer.getName();

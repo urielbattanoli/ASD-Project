@@ -4,8 +4,8 @@ import java.util.List;
 
 public interface DAO {
 
-    void saveAccount(Account account);
-    void updateAccount(Account account);
-    Account loadAccount(String id);
-    List<Account> getAccounts();
+    void saveAccount(IAccount account);
+    void updateAccount(IAccount account);
+    IAccount loadAccount(String id);
+    List<IAccount> getAccounts();
 }
